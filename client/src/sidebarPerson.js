@@ -20,18 +20,19 @@ import { BrowserRouter as Router,
       
         console.log(props.uName,"created");
         console.log(props);
-        this.logOut = this.logOut.bind(this);
+        this.logOutMy = this.logOutMy.bind(this);
     }
 
     
-    logOut() {
-
- axios.request({
-        method: 'GET',
-        url: "/logout",
-      }).then(res => { 
-       this.props.history.push({pathname:"/"});
-      }).catch((err)=>    console.log("unsucessfull",err));    }
+    logOutMy() {
+//  axios.request({
+//         method: 'GET',
+//         url: "/logout",
+//       }).then(res => { 
+//        this.props.history.push({pathname:"/"});
+//       }).catch((err)=>    console.log("unsucessfull",err)); 
+this.props.LogOut();
+}
     showSettings (event) {
       event.preventDefault();
     }
@@ -43,14 +44,14 @@ import { BrowserRouter as Router,
       <Link to="/Manager/ConfirmAction" className="menu-item" >
         ConfirmAction
       </Link>
-      <Link to="/Logout" className="menu-item">
+      <Link to="/" className="menu-item" onClick={this.logOutMy}>
         LogOut
       </Link>
 
       </Menu>
 
     <Switch>
-      <Route exact path= "/logout" render={() => this.logOut()} />
+      <Route exact path= "/Manager/NewUser" component={() => <AddAcount {...this.props}  />} />
       </Switch>
     </Router>
 

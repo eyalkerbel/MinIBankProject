@@ -108,7 +108,7 @@ Office.findOne({username:username},function(err,foundEmploy){
             req.session.IsMangar = true;
             req.session.save();
             console.log("foundUser");
-            res.send({answer:"manager"});
+            res.send({answer:"manager",userDetails:officeSession});
         } else {
             Person.findOne({username:username}, function(err,foundPerson) {
             if(err) {
@@ -123,7 +123,7 @@ Office.findOne({username:username},function(err,foundEmploy){
                     req.session.IsMangar = false;
                     req.session.save();
                     console.log("person");
-                    res.send({answer:"person"});
+                    res.send({answer:"person",userDetails:personSession});
                 } else {
                     console.log("none");
                     res.send({answer:"none"});

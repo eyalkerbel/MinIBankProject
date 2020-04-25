@@ -22,7 +22,7 @@ componentDidMount() {
 }
 render() {
     return(
-    <SidebarPerson {...this.state} outerContainerId={"App"}  />);
+    <SidebarPerson {...this.state} {...this.props} outerContainerId={"App"}  />);
 }
 
 }

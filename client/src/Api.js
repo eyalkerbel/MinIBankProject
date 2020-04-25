@@ -1,7 +1,6 @@
 import axios from "axios";
 
 
-
  export async function handleRegistrationClick(userName,password,officeName) {
     console.log("sss");
   return axios.request({
@@ -25,7 +24,8 @@ import axios from "axios";
 
 
 export async function handleLoginClick(username,password) {
-    axios.request({
+    console.log("login");
+    return axios.request({
         method: "POST",
         url: "/Login",
         data: {
@@ -33,17 +33,18 @@ export async function handleLoginClick(username,password) {
          password: password
        }
       }).then(res => {
-          console.log("api :" .res.data.answer);
+          console.log("api :", res.data.answer);
        if(res.data.answer == "manager") {
-         return "manager";
-       }
-       if(res.data.answer == "person") {
-         return "person";
+           console.log("maange");
+         return {answer:"manager",userDeatils:res.data.userDetails};
+       } else if(res.data.answer == "person") {
+         return {answer:"person",userDeatils:res.data.userDetails};
        }
        else {
-         return "none";
+         return {answer:"none"};
        }
       });
+      console.log("end-login");
 }
 
 

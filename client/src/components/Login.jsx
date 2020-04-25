@@ -14,43 +14,22 @@ import {
 class Login extends React.Component {
 constructor(props) {
     super(props);
-
-this.state = {
+  this.state = {
     response: '',
     uName: '',
-    password: '',
-};
-}
-componentDidMount() {
-   
-  }
-  
+    password: '', 
+  };
+this.handleSubmitLogin = this.handleSubmitLogin.bind(this);
+} 
   handleSubmitLogin(e) {
-  //  axios.request({
-  //    method: "POST",
-  //    url: "/Login",
-  //    data: {
-  //     username: this.state.uName,
-  //     password: this.state.password
-  //   }
-  //  }).then(res => {
-  //   if(res.data.answer == "manager") {
-  //     this.props.history.push("/Manager");
-  //   }
-  //   if(res.data.answer == "person") {
-  //     this.props.history.push("/Person");
-  //   }
-  //   else {
-  //     console.log("not good");
-  //   }
-  //  });
+    e.preventDefault();
+
    this.props.handleSubmit(this.state.uName,this.state.password);
       console.log("as");
-   e.preventDefault();
+
   };
 
   handleLoginClick() {
-   // this.setState({showLogin:true});
   }
 
 

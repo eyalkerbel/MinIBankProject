@@ -18,54 +18,57 @@ import {
   import Manager from "./components/Manager";
 import Login from './components/Login';
 //todo state with username isadmin isloggedin
-// class App extends Component{
-// constructor(){
-//   this.state = {isLoggedIn:false, isadmin: false, userName: "", session: ""}
-// }
+class App extends React.Component{
+constructor(props){
+  super(props);
+  this.state = {
+    isLoggedIn:false,
+     isAdmin: false,
+      userName: "",
+       session:{
+       }};
+  this.onlogIn = this.onlogIn.bind(this);
+  this.LogOut = this.LogOut.bind(this);
+}
+onlogIn(session, isAdmin, userName) {
+  console.log("App");
+  this.setState({isLoggedIn:true, isAdmin: isAdmin, userName: userName, session: session});
+}
+LogOut() {
+  this.setState({isLoggedIn:false});
+}
+render(){
+  if(this.state.isLoggedIn){
+    if(this.state.isAdmin) {
+    return(  <Manager LogOut={this.LogOut} />);
+    } else {
+     return( <Person LogOut={this.LogOut} />);
+    }
+  }
 
-// onlogIn(session, isAdmin, userName) {
-//   this.setState({isLoggedIn:true, isadmin: isadmin, userName: userName, session: session})
-// }
-
-// render(){
-//   if(isLoggedIn){
-//     return (
-//       <Router>
-//       <div className="App">
-//         <header className="App-header">
-//         <Switch>
-//         <Route exact path ="/" component={Home}  />
-//         <Route exact path ="/Manager" component={Manager}  />
-//         <Route exact path="/Person" component={Person} />
-//         </Switch>
-//         </header>
-//       </div>
-//       </Router>
-//     );
-//   }
-
-// else{
-//   return (
-//    <Home onLogIn={this.onlogIn} />
-//   );
-// }
-// }
-// }
-
-function App() {
+else{
   return (
-    <Router>
-    <div className="App">
-      <header className="App-header">
-      <Switch>
-      <Route exact path ="/" component={Home}  />
-      <Route exact path ="/Manager" component={Manager}  />
-      <Route exact path="/Person" component={Person} />
-      </Switch>
-      </header>
-    </div>
-    </Router>
+   <Home onLogIn={this.onlogIn} />
   );
 }
+}
+}
+
+
+// function App() {
+//   return (
+//     <Router>
+//     <div className="App">
+//       <header className="App-header">
+//       <Switch>
+//       <Route exact path ="/" component={Home }  />
+//       <Route exact path ="/Manager" component={Manager}  />
+//       <Route exact path="/Person" component={Person} />
+//       </Switch>
+//       </header>
+//     </div>
+//     </Router>
+//   );
+// }
 
 export default withRouter(App);
