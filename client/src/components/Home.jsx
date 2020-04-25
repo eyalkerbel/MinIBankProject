@@ -44,7 +44,7 @@ async isSuccessedToLogin(username,password) {
   //this.props.history.push("/Person");
 } else {
   this.setState({tryToLogin:false});
-  console.log("none");
+  console.log("noneofthose");
 } }
 
 

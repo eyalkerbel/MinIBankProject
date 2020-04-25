@@ -99,7 +99,7 @@ Office.findOne({username:username},function(err,foundEmploy){
     } else {
         if(foundEmploy) {
             const officeSession = new Office({
-                username:username,
+               username:username, 
                 password:password,
                 officeName: foundEmploy.officeEmployee,
                 officeEmployee: foundEmploy.officeEmployee
@@ -122,7 +122,7 @@ Office.findOne({username:username},function(err,foundEmploy){
                     req.session.currentUser = personSession;
                     req.session.IsMangar = false;
                     req.session.save();
-                    console.log("person");
+                    console.log("person Login");
                     res.send({answer:"person",userDetails:personSession});
                 } else {
                     console.log("none");

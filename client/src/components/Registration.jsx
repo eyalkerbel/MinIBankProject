@@ -27,7 +27,7 @@ class Registration extends React.Component {
             this.setState({errorMassage: "passwords need to be fit"});
         }
         else {
-            console.log("oo");
+            console.log("passvalidion");
             this.props.handleSubmit(username,password,officeName);
         }
         e.preventDefault();

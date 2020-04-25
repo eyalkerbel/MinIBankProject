@@ -8,7 +8,7 @@ constructor(props) {
         username: '',
         password: '',
     }
-    console.log("person");
+    console.log("Enter person");
 }
 
 componentDidMount() {

@@ -25,7 +25,6 @@ this.handleSubmitLogin = this.handleSubmitLogin.bind(this);
     e.preventDefault();
 
    this.props.handleSubmit(this.state.uName,this.state.password);
-      console.log("as");
 
   };
 

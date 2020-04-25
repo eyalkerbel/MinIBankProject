@@ -13,7 +13,7 @@ import axios from "axios";
         }
     }).then(res => {
         if(res.data.answer == "Succsessfully") { 
-            console.log("true")
+            console.log("trues")
             return true;
         } else {
             return false;
@@ -24,7 +24,7 @@ import axios from "axios";
 
 
 export async function handleLoginClick(username,password) {
-    console.log("login");
+    console.log("Login");
     return axios.request({
         method: "POST",
         url: "/Login",
