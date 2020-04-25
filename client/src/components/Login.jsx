@@ -25,39 +25,32 @@ componentDidMount() {
    
   }
   
-  callApi = async () => {
-    const response = await fetch('/api/hello');
-    const body = await response.json();
-    if (response.status !== 200) throw Error(body.message);
-    console.log(body);
-    return body;
-  };
-
-  handleSubmit = async e => {
-   axios.request({
-     method: "POST",
-     url: "/Login",
-     data: {
-      username: this.state.uName,
-      password: this.state.password
-    }
-   }).then(res => {
-    if(res.data.answer == "manager") {
-      this.props.history.push("/Manager");
-      console.log("good");
-    }
-    if(res.data.answer == "person") {
-      this.props.history.push("/Person");
-    }
-    else {
-      console.log("not good");
-    }
-   });
+  handleSubmitLogin(e) {
+  //  axios.request({
+  //    method: "POST",
+  //    url: "/Login",
+  //    data: {
+  //     username: this.state.uName,
+  //     password: this.state.password
+  //   }
+  //  }).then(res => {
+  //   if(res.data.answer == "manager") {
+  //     this.props.history.push("/Manager");
+  //   }
+  //   if(res.data.answer == "person") {
+  //     this.props.history.push("/Person");
+  //   }
+  //   else {
+  //     console.log("not good");
+  //   }
+  //  });
+   this.props.handleSubmit(this.state.uName,this.state.password);
+      console.log("as");
    e.preventDefault();
   };
 
-   handleRegistrationClick() {
-    this.setState({showLogin:true});
+  handleLoginClick() {
+   // this.setState({showLogin:true});
   }
 
 
@@ -71,7 +64,7 @@ componentDidMount() {
       <div className="login-header">
         <h1>Login</h1>
       </div>
-      <form className="login-form" onSubmit={this.handleSubmit}>
+      <form className="login-form" onSubmit={this.handleSubmitLogin}>
         <h3>Username:</h3>
         <input type="text" placeholder="Username"  onChange={e => {this.setState({uName:e.target.value})} }/><br />
         <h3>Password:</h3>
@@ -84,7 +77,7 @@ componentDidMount() {
     <div className="error-page">
     </div>
     
-    <div className="try-again" onClick={this.handleRegistrationClick}></div>
+    <div className="try-again" onClick={this.handleLoginClick}></div>
     </div>}
     </div>
     );

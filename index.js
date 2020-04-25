@@ -13,20 +13,14 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.urlencoded());
  
-const {
-    PORT = 3000,
-    NODE_ENV = 'development',
-    SESS_NAME = 'sid'
-} = process.env
 
-const IN_PROD = NODE_ENV === 'production';
 app.use(express.static(path.join(__dirname, 'client/public')));
 
 app.set('view engine', 'ejs');
 app.use(express.static("public"));
 
 app.use(session({
-    name: SESS_NAME,
+    name: "SESS_NAME",
     genid: (req) => {
         console.log('Inside the session middleware');
         console.log(req.session);
@@ -34,7 +28,6 @@ app.use(session({
       },
       cookie:  {maxAge: 1000* 60 * 60 * 2,
                 sameSite:true,
-                secure: IN_PROD,
                     },
     secret: 'my secret',
     resave: false,
@@ -99,7 +92,7 @@ app.post("/addAcountToManager",function(req,res){
 app.post("/Login", function(req,res){
 const username = req.body.username;
 const password = req.body.password; // TODO:meanwhile autontication only with username
-
+console.log(username,password);
 Office.findOne({username:username},function(err,foundEmploy){
     if(err) {
         console.log(err);
@@ -112,7 +105,8 @@ Office.findOne({username:username},function(err,foundEmploy){
                 officeEmployee: foundEmploy.officeEmployee
             });
             req.session.currentUser = officeSession;
-        
+            req.session.IsMangar = true;
+            req.session.save();
             console.log("foundUser");
             res.send({answer:"manager"});
         } else {
@@ -126,6 +120,7 @@ Office.findOne({username:username},function(err,foundEmploy){
                         password:password
                     });
                     req.session.currentUser = personSession;
+                    req.session.IsMangar = false;
                     req.session.save();
                     console.log("person");
                     res.send({answer:"person"});
@@ -162,10 +157,11 @@ app.post("/GetManagarData",function(req,res){
     res.send({username:currentUser.username,OfficeName:currentUser.officeName,officeEmployee:currentUser.officeEmployee});
 });
 
-app.post("/api/Registration",function(req,res) {
+app.post("/Registration",function(req,res) {
  Office.deleteMany({},function(err){});
  Person.deleteMany({},function(err){});
  console.log(req.session);
+ console.log(req.body.userName);
     const officeF = new Office({
         username:req.body.userName,
         officeName: req.body.officeName,
@@ -198,3 +194,12 @@ Office.register(officeF,req.body.password,function(err,found) {
 app.listen(5000, function() {
     console.log("Server started on port 3000");
   });
+
+  app.get("/hi",function (req,res) {
+    res.send({answer:"f"});
+    console.log("hi");
+  });
+  app.post("/hi",function (req,res) {
+    res.send({answer:"f"});
+    console.log("hi");
+  })
