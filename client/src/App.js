@@ -43,7 +43,7 @@ render(){
     if(this.state.isAdmin) {
     return(  <Manager LogOut={this.LogOut} session={this.state.session} />);
     } else {
-     return( <Person LogOut={this.LogOut} />);
+     return( <Person LogOut={this.LogOut} session={this.state.session} />);
     }
   }
 

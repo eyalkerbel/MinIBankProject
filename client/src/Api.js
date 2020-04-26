@@ -12,7 +12,7 @@ import axios from "axios";
             officeName: officeName
         }
     }).then(res => {
-        if(res.data.answer == "Succsessfully") { 
+        if(res.data.answer == "Succsessfully") { // TODO: expand the option for validtion,office seperate aand person seperate
             console.log("trues")
             return true;
         } else {
@@ -35,7 +35,7 @@ export async function handleLoginClick(username,password) {
       }).then(res => {
           console.log("api :", res.data.answer);
        if(res.data.answer == "found") {
-           console.log("maange");
+           console.log("maange",res.data.userDetails);
          return {answer:"found",userDeatils:res.data.userDetails};
        }
        else {

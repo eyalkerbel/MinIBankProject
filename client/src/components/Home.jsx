@@ -42,7 +42,7 @@ async isSuccessedToLogin(username,password) {
 //   this.props.onLogIn({},this.state.isManager,username);
   if(answerLogin.answer == "found") {
     this.setState({tryToLogin:false,isManager:answerLogin.userDeatils.isAdmin,session:answerLogin.userDeatils});
-    this.props.onLogIn({officeName:answerLogin.userDeatils.officeName},this.state.isManager,username);
+    this.props.onLogIn({officeName:answerLogin.userDeatils.officeName,OfficeID:answerLogin.userDeatils.officeID},this.state.isManager,username);
   } else {
   this.setState({tryToLogin:false});
   console.log("noneofthose");

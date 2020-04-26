@@ -5,7 +5,7 @@ var personSchema = new mongoose.Schema({
     username: String,
     password: String,
     isAdmin: Boolean,
-    officeName: String
+    officeID: String,
   });
   
 
@@ -13,34 +13,37 @@ var personSchema = new mongoose.Schema({
   const Person = mongoose.model("Person",personSchema);
   module.exports = Person;
 
-module.exports.PersonIsexists = async function PersonIsexists(username,password,isAdmin,officeName) {
+module.exports.PersonIsexists = async function PersonIsexists(username,password,isAdmin,officeId) {
   
   return new Promise(resolve => {
-    Person.findOne({username:username},function(err,foundPerson){
-        console.log(foundPerson);
-        if(err) {
-            console.log(err);
-        } else {
+    Person.findOne({username:username},function(err,foundPerson){ //TODO check with password
+    console.log(foundPerson);
+    if(err) {
+        console.log(err);
+    } else {
         if(foundPerson) {
            resolve(foundPerson)
         } else {
            resolve(null);
         }
     }
-     } );
+     });
 });
 }
-  module.exports.createPerson = async function createPerson(username,password,isAdmin,officeName) {
-        var checkIsExsits = await this.PersonIsexists(username,password,isAdmin,officeName);
-    if(checkIsExsits == true) {
+  module.exports.createPerson = async function createPerson(username,password,isAdmin,officeId) {
+      console.log("create-person")
+    var checkIsExsits = await this.PersonIsexists(username,password,isAdmin,officeId);
+    console.log(checkIsExsits);
+    if(checkIsExsits != null) {
         return null;
     } else {
         const person = new Person({
         username:username,
         password:password,
         isAdmin:isAdmin,
-        officeName:officeName
+        officeID:officeId
       });
+      console.log(person);
       person.save();
       return person;
     }

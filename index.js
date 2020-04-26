@@ -32,15 +32,30 @@ app.post("/Registration",function(req,res) {
     var password = req.body.password;
     var officeName = req.body.officeName;
    //  Office.deleteAll();
-  var office = await Office.createOffice(username,password,officeName);
-
+   var office = await Office.createOffice(officeName); // create Office and check that there is not data like the office's data 
     if(office != null) {
-       console.log("Succsessfully");
-       res.send({answer: "Succsessfully"});
-    } else {
-       console.log("ooo");
-       res.send({answer: "ooo"});
+     var person = await Person.createPerson(username,password,true,office._id); // create person and check that there is not data like the person's data 
+        if(person != null) {
+     await Office.updateOfficeManager(office,person._id);
+     res.send({answer: "Succsessfully"});
+            }
+        else {
+         await Office.deleteOffice(office);
+         res.send({answer: "ooo"}); // TODO: expand the option for validtion,office seperate aand person seperate
+        }
     }
+    if(office == null) {
+        res.send({answer: "ooo"});  // TODO: expand the option for validtion,office seperate aand person seperate
+    }
+
+
+    // if(office != null) {
+    //    console.log("Succsessfully");
+    //   
+    // } else {
+    //    console.log("ooo");
+    //    res.send({answer: "ooo"});
+    // }
 }
 });
 
@@ -82,10 +97,15 @@ app.post("/Login", function(req,res){
         console.log("nulsaas");
         res.send({answer:"none"});
     } else {
+
+       var nameOffice = await Office.returnOfficeNameByID(person.officeID);
+       console.log(nameOffice,"name");
         var Details = {
             isAdmin: person.isAdmin,
-            officeName: person.officeName
+            officeID: person.officeID,
+            officeName: nameOffice
         };
+        console.log(Details);
         res.send({answer:"found",userDetails:Details});
 
     }}
