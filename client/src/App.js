@@ -33,6 +33,7 @@ constructor(props){
 onlogIn(session, isAdmin, userName) {
   console.log("Component App");
   this.setState({isLoggedIn:true, isAdmin: isAdmin, userName: userName, session: session});
+  console.log(session,isAdmin,userName);
 }
 LogOut() {
   this.setState({isLoggedIn:false});
@@ -40,7 +41,7 @@ LogOut() {
 render(){
   if(this.state.isLoggedIn){
     if(this.state.isAdmin) {
-    return(  <Manager LogOut={this.LogOut} />);
+    return(  <Manager LogOut={this.LogOut} session={this.state.session} />);
     } else {
      return( <Person LogOut={this.LogOut} />);
     }

@@ -18,6 +18,8 @@ this.getManagerData().then(res =>
     {
         this.setState({uName:res.username,officeName:res.officeName,employeList:res.officeEmployee});
 }).catch(err => console.log(err,"error"));
+
+
     }
     getManagerData = async () => {
         const response = await fetch("/GetManagarData", {

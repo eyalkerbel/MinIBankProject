@@ -34,15 +34,16 @@ class Home extends React.Component {
 async isSuccessedToLogin(username,password) {
   let answerLogin = await API.handleLoginClick(username,password);
   console.log("anser", answerLogin);
-  if(answerLogin.answer == "manager") {
-  this.setState({tryToLogin:false,isManager:true});
-  this.props.onLogIn({},this.state.isManager,username);
-  //this.props.history.push("/Manager");
-} else if(answerLogin.answer == "person") {
-  this.setState({tryToLogin:false,isManager:false});
-  this.props.onLogIn({},this.state.isManager,username);
-  //this.props.history.push("/Person");
-} else {
+//   if(answerLogin.answer == "manager") {
+//   this.setState({tryToLogin:false,isManager:true,session:answerLogin.userDeatils});
+//   this.props.onLogIn(session,this.state.isManager,username);
+// } else if(answerLogin.answer == "person") {
+//   this.setState({tryToLogin:false,isManager:false,session:answerLogin.userDeatils});
+//   this.props.onLogIn({},this.state.isManager,username);
+  if(answerLogin.answer == "found") {
+    this.setState({tryToLogin:false,isManager:answerLogin.userDeatils.isAdmin,session:answerLogin.userDeatils});
+    this.props.onLogIn({officeName:answerLogin.userDeatils.officeName},this.state.isManager,username);
+  } else {
   this.setState({tryToLogin:false});
   console.log("noneofthose");
 } }
@@ -52,7 +53,7 @@ async isSuccessedToLogin(username,password) {
    let answerIsGood = await API.handleRegistrationClick(uName,password,officeName);
     if(answerIsGood) { 
       this.setState({successfullRegister:true,tryToRegister:false,isManager:true,uName:uName,password:password,officeName:officeName}); // go to app.jsx with the data
-      this.props.onLogIn({},this.state.isManager,uName);
+      this.props.onLogIn({username:uName,officeName:officeName},this.state.isManager,uName);
       //  this.props.history.push({pathname:"/Manager"});
     }
     else {

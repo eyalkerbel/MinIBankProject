@@ -34,11 +34,9 @@ export async function handleLoginClick(username,password) {
        }
       }).then(res => {
           console.log("api :", res.data.answer);
-       if(res.data.answer == "manager") {
+       if(res.data.answer == "found") {
            console.log("maange");
-         return {answer:"manager",userDeatils:res.data.userDetails};
-       } else if(res.data.answer == "person") {
-         return {answer:"person",userDeatils:res.data.userDetails};
+         return {answer:"found",userDeatils:res.data.userDetails};
        }
        else {
          return {answer:"none"};
