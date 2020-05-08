@@ -30,6 +30,21 @@ module.exports.PersonIsexists = async function PersonIsexists(username,password,
      });
 });
 }
+
+module.exports.returnOfficeById = async function returnOfficeById(office_id) {
+    return new Promise(resolve => {
+        Office.findOne({_id: office_id},function(err,foundUser){
+         if(err) {
+             console.log(err);
+         } else {
+             console.log("the office is ",nameOffice);
+              resolve(foundUser);
+         }
+     }); 
+ });
+ }
+
+
   module.exports.createPerson = async function createPerson(username,password,isAdmin,officeId) {
       console.log("create-person")
     var checkIsExsits = await this.PersonIsexists(username,password,isAdmin,officeId);

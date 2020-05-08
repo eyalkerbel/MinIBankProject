@@ -1,18 +1,21 @@
 import React, { useEffect } from "react";
-import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
-    Link,
-    Redirect,
-    useHistory,
-    useLocation,
-    withRouter
-  } from "react-router-dom";
+// import {
+//     BrowserRouter as Router,
+//     Switch,
+//     Route,
+//     Link,
+//     Redirect,
+//     useHistory,
+//     useLocation,
+//     withRouter
+//   } from "react-router-dom";
   import * as API from "../Api";
   import Registration from "./Registration";
   import Login from "./Login";
 import session from "express-session";
+import { connect } from "react-redux";
+import types from "../Actions/types";
+import { loginAction } from "../Actions/UserActions";
 class Home extends React.Component {
     constructor(props) {
       super(props);
@@ -34,27 +37,23 @@ class Home extends React.Component {
 async isSuccessedToLogin(username,password) {
   let answerLogin = await API.handleLoginClick(username,password);
   console.log("anser", answerLogin);
-//   if(answerLogin.answer == "manager") {
-//   this.setState({tryToLogin:false,isManager:true,session:answerLogin.userDeatils});
-//   this.props.onLogIn(session,this.state.isManager,username);
-// } else if(answerLogin.answer == "person") {
-//   this.setState({tryToLogin:false,isManager:false,session:answerLogin.userDeatils});
-//   this.props.onLogIn({},this.state.isManager,username);
   if(answerLogin.answer == "found") {
     this.setState({tryToLogin:false,isManager:answerLogin.userDeatils.isAdmin,session:answerLogin.userDeatils});
-    this.props.onLogIn({officeName:answerLogin.userDeatils.officeName,OfficeID:answerLogin.userDeatils.officeID},this.state.isManager,username);
+    this.props.loginDispatch(username,password,this.state.isManager,answerLogin.userDeatils.officeID);
+
+    //this.props.onLogIn({officeName:answerLogin.userDeatils.officeName,OfficeID:answerLogin.userDeatils.officeID},this.state.isManager,username);
   } else {
   this.setState({tryToLogin:false});
   console.log("noneofthose");
 } }
 
 
- async isSuccessedToRegister(uName,password,officeName) {
-   let answerIsGood = await API.handleRegistrationClick(uName,password,officeName);
-    if(answerIsGood) { 
-      this.setState({successfullRegister:true,tryToRegister:false,isManager:true,uName:uName,password:password,officeName:officeName}); // go to app.jsx with the data
-      this.props.onLogIn({username:uName,officeName:officeName},this.state.isManager,uName);
-      //  this.props.history.push({pathname:"/Manager"});
+ async isSuccessedToRegister(username,password,officeName) {
+   let answerIsGood = await API.handleRegistrationClick(username,password,officeName);
+    if(answerIsGood.answer == true) { 
+      this.setState({successfullRegister:true,tryToRegister:false,isManager:true,username:username,password:password,officeName:officeName}); // go to app.jsx with the data
+    //  this.props.onLogIn({username:uName,officeName:officeName},this.state.isManager,uName);
+    this.props.loginDispatch(username,password,this.state.isManager,answerIsGood.officeID);
     }
     else {
       this.setState({tryToRegister:false})
@@ -66,7 +65,8 @@ async isSuccessedToLogin(username,password) {
        this.isSuccessedToRegister(userName,password,officeName);      
       }
   handleLoginClick(username,password) {
-  this.isSuccessedToLogin(username,password);
+    // Dispatch 
+    this.isSuccessedToLogin(username,password);
     }
     Login() {
       this.setState({LoginDisplay:true});
@@ -74,8 +74,6 @@ async isSuccessedToLogin(username,password) {
     Register() {
       this.setState({LoginDisplay:false});
     }
-
-
       render () {
         return(
         <div>
@@ -83,30 +81,20 @@ async isSuccessedToLogin(username,password) {
          <button type="radio" name="Register" onClick={this.Register} >Registration</button>
          {this.state.LoginDisplay? <Login handleSubmit={this.handleLoginClick}  /> :   <Registration handleSubmit={this.handleRegistrationClick}/>}
         </div>);
-        
-
-    //     return (
-    //         <Router>
-    //         <div>
-    //         <Link to="/"><div> <button type="radio" name="signIn">Sign In </button></div> </Link>
-    //         <Link to="/Registration"><button type="radio" name="Register" >Registration</button></Link>
-    //         </div>
-    //         <Switch>
-    //         {/* {this.state.successfullRegister && <Redirect to="/User" />} */}
-    //             <Route exact path="/">
-    //             <Login handleSubmit={this.handleLoginClick}  />
-    //             </Route>
-    //             <Route path="/Registration">
-    //             <Registration handleSubmit={this.handleRegistrationClick}/>
-    //             </Route>
-    //         </Switch>
-    //         </Router>
-
-    // )
   };
-    }
 
-    export default Home;
+
+  
+
+
+    }
+    const mapDispatchToProps = (dispatch) => ({  
+      loginDispatch: (username, password,isAdmin,officeID) => dispatch(loginAction(username,password,isAdmin,officeID))
+    });
+    
+
+    //export default Home;
+    export default connect(null, mapDispatchToProps)(Home);
 
 
 

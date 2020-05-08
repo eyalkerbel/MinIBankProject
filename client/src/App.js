@@ -14,62 +14,62 @@ import {
     useLocation,
     withRouter
   } from "react-router-dom";
-
+import {connect} from "react-redux";
   import Manager from "./components/Manager";
 import Login from './components/Login';
+
 //todo state with username isadmin isloggedin
 class App extends React.Component{
 constructor(props){
   super(props);
   this.state = {
     isLoggedIn:false,
-     isAdmin: false,
       userName: "",
-       session:{
-       }};
-  this.onlogIn = this.onlogIn.bind(this);
+      isManager:false,
+      // session:{
+      // }
+      };
+  //this.onlogIn = this.onlogIn.bind(this);
   this.LogOut = this.LogOut.bind(this);
 }
-onlogIn(session, isAdmin, userName) {
-  console.log("Component App");
-  this.setState({isLoggedIn:true, isAdmin: isAdmin, userName: userName, session: session});
-  console.log(session,isAdmin,userName);
+componentWillReceiveProps(nextProps) {
+ console.log("componentWillReceiveProps",nextProps.user);
+ if(nextProps.user.username != null) {
+this.setState({isLoggedIn:true,isManager:nextProps.user.isAdmin});
+ }
+ console.log(nextProps.user.isAdmin);
+ 
 }
 LogOut() {
   this.setState({isLoggedIn:false});
 }
 render(){
+  console.log(this.state.isLoggedIn);
   if(this.state.isLoggedIn){
-    if(this.state.isAdmin) {
-    return(  <Manager LogOut={this.LogOut} session={this.state.session} />);
+    if(this.state.isManager) {
+    return(  <Manager LogOut={this.LogOut} session={this.props.user} />); 
     } else {
-     return( <Person LogOut={this.LogOut} session={this.state.session} />);
+     return( <Person LogOut={this.LogOut}  session={this.props.user} />); 
     }
   }
 
 else{
   return (
+    <div>
    <Home onLogIn={this.onlogIn} />
+   
+   </div>
   );
 }
 }
 }
+ const mapStateToProps = (state) => {
+   console.log(state.user,"sas");
+   return {
+    user: state.user
+   };
+  
+};
 
-
-// function App() {
-//   return (
-//     <Router>
-//     <div className="App">
-//       <header className="App-header">
-//       <Switch>
-//       <Route exact path ="/" component={Home }  />
-//       <Route exact path ="/Manager" component={Manager}  />
-//       <Route exact path="/Person" component={Person} />
-//       </Switch>
-//       </header>
-//     </div>
-//     </Router>
-//   );
-// }
-
-export default withRouter(App);
+export default connect(mapStateToProps,null)(App);
+// {this.props.user.username} {this.props.user.password} {this.props.user.isAdmin} {this.props.user.officeID}

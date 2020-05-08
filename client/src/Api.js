@@ -13,10 +13,10 @@ import axios from "axios";
         }
     }).then(res => {
         if(res.data.answer == "Succsessfully") { // TODO: expand the option for validtion,office seperate aand person seperate
-            console.log("trues")
-            return true;
+            console.log("trues");
+            return {answer:true,officeID:res.data.officeID};
         } else {
-            return false;
+            return  {answer:false};
         }
 
     });

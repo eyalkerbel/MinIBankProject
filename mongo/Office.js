@@ -46,18 +46,41 @@ return new Promise(resolve => {
     }); 
 });
 }
+
+module.exports.returnOfficeById = async function returnOfficeById(office_id) {
+    return new Promise(resolve => {
+        Office.findOne({_id: office_id},function(err,foundUser){
+         if(err) {
+             console.log(err);
+         } else {
+              resolve(foundUser);
+         }
+     }); 
+ });
+ }
+
+
 module.exports.updateOfficeManager = async function updateOfficeManager(office,person_id) {
  
-console.log(office.officeName);
-Office.findOne({officeName: office.officeName})
+    console.log("updateOfficeManager")
+    Office.findOne({officeName: office.officeName})
   .then(user => {
-    //  console.log(user);
-    user.AdminsID = [person_id];
+    //user.AdminsID = [person_id];
+    user.AdminsID.push(person_id); // TODO: check this if it is work
     user.markModified('AdminsID');
     user.save(err => console.log(err));
 });
-// console.log("finsihfunction");
 }
+module.exports.addOfficeEmpolyee = async function addOfficeEmpolyee(office,person_id) {
+    console.log("addOfficeEmpolyee");
+    Office.findOne({officeName: office.officeName})
+    .then(user => {
+    user.officeEmployeeID.push(person_id);
+    user.markModified('officeEmployeeID');
+    user.save(err => console.log(err));
+});
+}
+
     module.exports.createOffice = async function createOffice(officeName) {
     var office = await this.IsExsitsOffice(officeName);
     console.log("office create wating");
@@ -80,6 +103,4 @@ module.exports.deleteAll = function deleteAll() {
 }
 module.exports.deleteOffice = async function deleteOffice(office) {
     Office.deleteMany({officeName:office.officeName},function(err){});
-
-
 }

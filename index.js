@@ -2,10 +2,10 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const path = require('path');
 const mongoose = require('mongoose');
-// const session = require('express-session');
+const session = require('express-session');
 // const passport = require('passport');
 // const passportLocalMongoose = require('passport-local-mongoose');
-// const uuid = require('uuid')
+ const uuid = require('uuid')
 // const LocalStrategy = require('passport-local').Strategy;
  const Office = require("./mongo/Office");
  const Person = require("./mongo/Person");
@@ -20,6 +20,20 @@ app.use(express.static(path.join(__dirname, 'client/public')));
 app.set('view engine', 'ejs');
 app.use(express.static("public"));
 
+app.use(session({
+    name: "SESS_NAME",
+    genid: (req) => {
+        console.log('Inside the session middleware');
+        console.log(req.session);
+        return uuid.v4(); // use UUIDs for session IDs
+      },
+      cookie:  {maxAge: 1000* 60 * 60 * 2,
+                sameSite:true,
+                    },
+    secret: 'my secret',
+    resave: false,
+    saveUninitialized: false
+  }));
 
 
 
@@ -37,7 +51,9 @@ app.post("/Registration",function(req,res) {
      var person = await Person.createPerson(username,password,true,office._id); // create person and check that there is not data like the person's data 
         if(person != null) {
      await Office.updateOfficeManager(office,person._id);
-     res.send({answer: "Succsessfully"});
+    req.session.currentPerson = person;
+    console.log(req.session);
+     res.send({answer: "Succsessfully",officeID:office._id});
             }
         else {
          await Office.deleteOffice(office);
@@ -47,15 +63,6 @@ app.post("/Registration",function(req,res) {
     if(office == null) {
         res.send({answer: "ooo"});  // TODO: expand the option for validtion,office seperate aand person seperate
     }
-
-
-    // if(office != null) {
-    //    console.log("Succsessfully");
-    //   
-    // } else {
-    //    console.log("ooo");
-    //    res.send({answer: "ooo"});
-    // }
 }
 });
 
@@ -63,24 +70,25 @@ app.post("/Registration",function(req,res) {
 
 
 app.post("/addAcountToManager",function(req,res){
-    // const {officeEmployee} = req.session.currentUser;
-    // const person = new Person({
-    //     username: req.body.username
-    // });
-    // Person.register(person, req.body.password ,function(err,found) {
-    //  if(err) {
-    //      console.log(err, "erorr");
-    //  } else {
-    //      req.session.currentUser.officeEmployee.push(found);
-    //      console.log(req.session.currentUser.officeEmployee);
-    //     req.session.save();
-    //  }
-    // });
+    
+    console.log(req.session.currentPerson);
+    AddAccount();
+    async function AddAccount() {    
+     const {currentPerson} = req.session;
+     console.log(currentPerson);
+     var username = req.body.username;
+     var password = req.body.password;
+     console.log(currentPerson.officeID);
+     var office = await Office.returnOfficeById(currentPerson.officeID);
+     var newPerson = await Person.createPerson(username,password,false,office._id);
+    if(newPerson != null) {
+      await Office.addOfficeEmpolyee(office,newPerson._id);
+        console.log("succseed");
+    } else {
+        console.log("faild");
+    }
+}
 });
-
-
-
-
 
 
 app.post("/Login", function(req,res){
@@ -97,7 +105,7 @@ app.post("/Login", function(req,res){
         console.log("nulsaas");
         res.send({answer:"none"});
     } else {
-
+        req.session.currentPerson = person;
        var nameOffice = await Office.returnOfficeNameByID(person.officeID);
        console.log(nameOffice,"name");
         var Details = {
@@ -107,7 +115,6 @@ app.post("/Login", function(req,res){
         };
         console.log(Details);
         res.send({answer:"found",userDetails:Details});
-
     }}
     
 
@@ -123,8 +130,6 @@ app.post("/Login", function(req,res){
 app.get("/GetPerson", function(req,res) {
     console.log("req.session");
 console.log(req.session);
-
-
 });
 
 app.get("/logout", function(req,res) {

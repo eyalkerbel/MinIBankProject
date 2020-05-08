@@ -11,7 +11,7 @@ class AddAccount extends React.Component {
         console.log(props);
     }
 
-    handleSubmit = async e => {
+    handleSubmit = async e => { // TODO pass it to the API
         e.preventDefault();
         console.log("sss");
         const response = await fetch('/addAcountToManager', {
@@ -22,9 +22,7 @@ class AddAccount extends React.Component {
           body: JSON.stringify({ username: this.state.uName,password: this.state.password }),
         });
        
-     //   this.setState({ responseToPost: body });
       };
-//mission not complete: get the Name from manager for inserting the new user detail under manager name
     render() {
         return (
             <div>

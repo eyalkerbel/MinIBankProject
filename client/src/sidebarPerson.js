@@ -3,6 +3,7 @@ import { slide as Menu } from 'react-burger-menu';
 import AddAcount from "./components/AddAcount";
 import SignOut from "./components/SignOut";
 import axios from "axios";
+import {logoutAction} from "./Actions/UserActions";
 import { BrowserRouter as Router,
     Switch,
     Route,
@@ -12,7 +13,7 @@ import { BrowserRouter as Router,
     useLocation,
     withRouter
   } from "react-router-dom";
- 
+ import {connect} from "react-redux";
 
   class sidebarPerson extends React.Component {
     constructor(props) {
@@ -25,13 +26,9 @@ import { BrowserRouter as Router,
 
     
     logOutMy() {
-//  axios.request({
-//         method: 'GET',
-//         url: "/logout",
-//       }).then(res => { 
-//        this.props.history.push({pathname:"/"});
-//       }).catch((err)=>    console.log("unsucessfull",err)); 
+
 this.props.LogOut();
+this.props.LogOutDispatch();
 }
     showSettings (event) {
       event.preventDefault();
@@ -62,8 +59,11 @@ this.props.LogOut();
 
 
 }
+const mapDispatchToProps = (dispatch) => ({
+  LogOutDispatch:() => dispatch(logoutAction())
+  }); 
+    
 
-
-export default sidebarPerson;
+export default connect(null,mapDispatchToProps)(sidebarPerson);
 
 

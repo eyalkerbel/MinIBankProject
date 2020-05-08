@@ -3,6 +3,8 @@ import { slide as Menu } from 'react-burger-menu';
 import AddAcount from "./components/AddAcount";
 import SignOut from "./components/SignOut";
 import axios from "axios";
+import { connect } from "react-redux";
+import {logoutAction} from "./Actions/UserActions";
 import { BrowserRouter as Router,
     Switch,
     Route,
@@ -12,6 +14,7 @@ import { BrowserRouter as Router,
     useLocation,
     withRouter
   } from "react-router-dom";
+import { stat } from 'fs';
  
 
   class sidebar extends React.Component {
@@ -25,17 +28,9 @@ import { BrowserRouter as Router,
 
     
     logOutMy() {
-
-//  axios.request({
-//         method: 'GET',
-//         url: "/logout",
-//       }).then(res => { 
-//         console.log("hola");
-//         this.props.history.push({pathname:"/"});
-//        // addResponseMessage(res.data.serverMessage);
-//       }).catch((err)=>    console.log("unsucessfull",err)); 
-this.props.LogOut();
-}
+  this.props.LogOut();
+  this.props.LogOutDispatch();
+  }
 
     showSettings (event) {
       event.preventDefault();
@@ -55,7 +50,7 @@ this.props.LogOut();
       <Link to="/Manager/ConfirmAction" className="menu-item" >
         ConfirmAction
       </Link>
-      <Link to="/Logout" className="menu-item" onClick={this.logOutMy}>
+      <Link to="/" className="menu-item" onClick={this.logOutMy}>
         LogOut
       </Link>
 
@@ -73,29 +68,11 @@ this.props.LogOut();
 
 
 }
+const mapDispatchToProps = (dispatch) => {
+  console.log("dispatch")
+  return {
+LogOutDispatch:() => dispatch(logoutAction())
+  }
+}; 
 
-
-export default sidebar;
-
-
-// export default props => {
-//   return (
-      
-//     <Router>
-//      {console.log(props)}
-//     <Menu>
-//       <Link to="/Manager/NewUser" className="menu-item" >
-//         AddAcount
-//       </Link>
-//       <Link to="/Manager/ConfirmAction" className="menu-item" >
-//         ConfirmAction
-//       </Link>
-//       </Menu>
-
-//     <Switch>
-//       <Route exact path= "/Manager/NewUser" component={() => <AddAcount {...props} />} />
-//       </Switch>
-//     </Router>
-
-//   );
-// };
+export default connect(null,mapDispatchToProps)(sidebar);
