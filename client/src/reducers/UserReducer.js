@@ -9,22 +9,14 @@ const user = (state = INITIAL_STATE, action) => {
     switch (action.type) {
       case types.Login:
        return {
+           personID: action.personID,
             username: action.username,
             password: action.password,
             isAdmin: action.isAdmin,
             officeID: action.officeID 
         };
         case types.LogOut:
-         //return Object.assign(state, {});
-       return INITIAL_STATE;
-        // return {
-        //     username: "action.username",
-        //     password: "action.password",
-        //     isAdmin: "action.isAdmin",
-        //     officeID: "action.officeID" 
-        // }; 
-
-        ;
+         return INITIAL_STATE;
       default:
         return state
     }

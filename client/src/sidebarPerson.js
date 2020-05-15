@@ -14,6 +14,7 @@ import { BrowserRouter as Router,
     withRouter
   } from "react-router-dom";
  import {connect} from "react-redux";
+ import AddItem from "./components/AddItem";
 
   class sidebarPerson extends React.Component {
     constructor(props) {
@@ -41,6 +42,9 @@ this.props.LogOutDispatch();
       <Link to="/Manager/ConfirmAction" className="menu-item" >
         ConfirmAction
       </Link>
+      <Link to="/AddItem" className="menu-item" >
+        AddItem
+      </Link>
       <Link to="/" className="menu-item" onClick={this.logOutMy}>
         LogOut
       </Link>
@@ -48,6 +52,7 @@ this.props.LogOutDispatch();
       </Menu>
 
     <Switch>
+    <Route exact path= "/AddItem" component={() => <AddItem {...this.props}  />} />
       <Route exact path= "/Manager/NewUser" component={() => <AddAcount {...this.props}  />} />
       </Switch>
     </Router>

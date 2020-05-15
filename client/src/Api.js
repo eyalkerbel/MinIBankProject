@@ -23,6 +23,37 @@ import axios from "axios";
 }
 
 
+
+export async function AddItemToffice(itemName,itemPrice) {
+    console.log("AddItemToffice",itemPrice);
+    return axios.request({
+        method: "POST",
+        url: "/AddingItemToOffice",
+        data: {
+            itemName: itemName,
+            itemPrice: itemPrice
+        }
+    }).then(res => res.data.answer);
+}
+export async function getChargers() {  
+    return axios.request({
+        method: "GET",
+        url: "/GetChargers",
+       
+    }).then(res => res.data.chargers);  
+}
+
+export async function approveItem(itemId) {
+    return axios.request({
+        method: "POST",
+        url: "/ApproveItem",
+        data: {
+            itemID: itemId,
+        }
+    }).then(res => res.data.chargers);
+}
+
+
 export async function handleLoginClick(username,password) {
     console.log("Login");
     return axios.request({

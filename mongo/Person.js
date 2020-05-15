@@ -31,18 +31,22 @@ module.exports.PersonIsexists = async function PersonIsexists(username,password,
 });
 }
 
-module.exports.returnOfficeById = async function returnOfficeById(office_id) {
+module.exports.getPersonNameByID = async function getPersonNameByID(person_id) {
     return new Promise(resolve => {
-        Office.findOne({_id: office_id},function(err,foundUser){
-         if(err) {
-             console.log(err);
-         } else {
-             console.log("the office is ",nameOffice);
-              resolve(foundUser);
-         }
-     }); 
- });
- }
+          Person.findOne({_id:person_id},function (err,foundPerson) {
+        if(err) {
+            console.log(err);
+        } else {
+            if(foundPerson) {
+                 resolve(foundPerson.username);
+            }
+            else {
+                resolve(null)
+            }
+        }
+    });
+});
+}
 
 
   module.exports.createPerson = async function createPerson(username,password,isAdmin,officeId) {

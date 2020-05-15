@@ -1,10 +1,11 @@
 import React from 'react';
 import { slide as Menu } from 'react-burger-menu';
 import AddAcount from "./components/AddAcount";
-import SignOut from "./components/SignOut";
 import axios from "axios";
 import { connect } from "react-redux";
 import {logoutAction} from "./Actions/UserActions";
+import AddItem from "./components/AddItem";
+import ConformationItem from "./components/ConfermationItem";
 import { BrowserRouter as Router,
     Switch,
     Route,
@@ -34,9 +35,7 @@ import { stat } from 'fs';
 
     showSettings (event) {
       event.preventDefault();
-  
     }
-  
 
 
     render() {
@@ -47,8 +46,11 @@ import { stat } from 'fs';
       <Link to="/Manager/NewUser" className="menu-item" >
         AddAcount
       </Link>
-      <Link to="/Manager/ConfirmAction" className="menu-item" >
-        ConfirmAction
+      <Link to="/AddItem" className="menu-item" >
+        Add item
+      </Link>
+      <Link to="/ConformationItem" className="menu-item" >
+        Conformation item
       </Link>
       <Link to="/" className="menu-item" onClick={this.logOutMy}>
         LogOut
@@ -57,6 +59,11 @@ import { stat } from 'fs';
       </Menu>
 
     <Switch>
+      <Route exact path= "/ConformationItem" >
+      <div></div>
+      <ConformationItem />
+         </Route>
+      <Route exact path= "/AddItem" component={() => <AddItem {...this.props}  />} />
       <Route exact path= "/Manager/NewUser" component={() => <AddAcount {...this.props}  />} />
       </Switch>
     </Router>

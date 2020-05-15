@@ -1,14 +1,4 @@
 import React, { useEffect } from "react";
-// import {
-//     BrowserRouter as Router,
-//     Switch,
-//     Route,
-//     Link,
-//     Redirect,
-//     useHistory,
-//     useLocation,
-//     withRouter
-//   } from "react-router-dom";
   import * as API from "../Api";
   import Registration from "./Registration";
   import Login from "./Login";
@@ -39,8 +29,7 @@ async isSuccessedToLogin(username,password) {
   console.log("anser", answerLogin);
   if(answerLogin.answer == "found") {
     this.setState({tryToLogin:false,isManager:answerLogin.userDeatils.isAdmin,session:answerLogin.userDeatils});
-    this.props.loginDispatch(username,password,this.state.isManager,answerLogin.userDeatils.officeID);
-
+    this.props.loginDispatch(answerLogin.userDeatils.personID,username,password,this.state.isManager,answerLogin.userDeatils.officeID);
     //this.props.onLogIn({officeName:answerLogin.userDeatils.officeName,OfficeID:answerLogin.userDeatils.officeID},this.state.isManager,username);
   } else {
   this.setState({tryToLogin:false});
@@ -53,7 +42,7 @@ async isSuccessedToLogin(username,password) {
     if(answerIsGood.answer == true) { 
       this.setState({successfullRegister:true,tryToRegister:false,isManager:true,username:username,password:password,officeName:officeName}); // go to app.jsx with the data
     //  this.props.onLogIn({username:uName,officeName:officeName},this.state.isManager,uName);
-    this.props.loginDispatch(username,password,this.state.isManager,answerIsGood.officeID);
+    this.props.loginDispatch(answerIsGood.userDeatils.personID,username,password,this.state.isManager,answerIsGood.officeID);
     }
     else {
       this.setState({tryToRegister:false})
@@ -89,7 +78,7 @@ async isSuccessedToLogin(username,password) {
 
     }
     const mapDispatchToProps = (dispatch) => ({  
-      loginDispatch: (username, password,isAdmin,officeID) => dispatch(loginAction(username,password,isAdmin,officeID))
+      loginDispatch: (personID,username, password,isAdmin,officeID) => dispatch(loginAction(personID,username,password,isAdmin,officeID))
     });
     
 

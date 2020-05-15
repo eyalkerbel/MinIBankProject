@@ -57,7 +57,6 @@ else{
   return (
     <div>
    <Home onLogIn={this.onlogIn} />
-   
    </div>
   );
 }

@@ -9,6 +9,7 @@ const session = require('express-session');
 // const LocalStrategy = require('passport-local').Strategy;
  const Office = require("./mongo/Office");
  const Person = require("./mongo/Person");
+ const Item = require("./mongo/Item");
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -70,7 +71,6 @@ app.post("/Registration",function(req,res) {
 
 
 app.post("/addAcountToManager",function(req,res){
-    
     console.log(req.session.currentPerson);
     AddAccount();
     async function AddAccount() {    
@@ -91,32 +91,48 @@ app.post("/addAcountToManager",function(req,res){
 });
 
 
-app.post("/Login", function(req,res){
+app.post("/Login", async function(req,res){
     console.log("expreess login");
     const username = req.body.username;
     const password = req.body.password; // TODO:meanwhile autontication only with username
-    ReturnAnswer(username,password);
+    // const details = await ReturnAnswer(username,password);
+    // if (details === null){
+    //     res.send({answer:"none"});
+    // }
+    // else{
+    //     res.send({answer:"found",userDetails:details});
+    // }
 
 
-    async function ReturnAnswer(username,password) {
+
+ //   async function ReturnAnswer(username,password) {
     var person = await CheckIfUserExists(username,password);
     console.log("returning asnwer",person);
     if(person == null) {
-        console.log("nulsaas");
-        res.send({answer:"none"});
+        // return null;
+        // console.log("nulsaas");
+         res.send({answer:"none"});
     } else {
         req.session.currentPerson = person;
-       var nameOffice = await Office.returnOfficeNameByID(person.officeID);
-       console.log(nameOffice,"name");
+        if(person.isAdmin == true) {
+            console.log("here");
+            var list = await Item.getAllItemByID(person.officeID);
+            console.log("list:",list);
+            req.session.chargers = list;
+            console.log(req.session);
+        }
+        var nameOffice = await Office.returnOfficeNameByID(person.officeID);
         var Details = {
+            personID: person._id,
             isAdmin: person.isAdmin,
             officeID: person.officeID,
             officeName: nameOffice
         };
-        console.log(Details);
-        res.send({answer:"found",userDetails:Details});
-    }}
-    
+     //   return Details;
+        // console.log(Details);
+         res.send({answer:"found",userDetails:Details});
+    }
+ // }
 
     async function CheckIfUserExists(username,password) {
     console.log(username,password);
@@ -125,6 +141,39 @@ app.post("/Login", function(req,res){
     return person;
     }
 });
+
+app.get("/GetChargers",function(req,res) {
+res.send({chargers:req.session.chargers});
+});
+
+app.post("/approveItem",async function(req,res) {
+    itemID = req.body.itemID;
+    await Item.deleteItemByID(itemID);
+    console.log("finish in index delete item");
+    console.log(req.session.currentPerson);
+    var list = await Item.getAllItemByID(req.session.currentPerson.officeID);
+    req.session.chargers = list;
+    res.send({chargers:list});
+});
+
+
+app.post("/AddingItemToOffice",function (req,res) {
+   itemName = req.body.itemName;
+   itemPrice = req.body.itemPrice;
+   console.log("AddingItemToOffice",itemName,itemPrice);
+    createItem(itemName,itemPrice);
+   console.log("finssh creating item")
+   async function createItem(itemName,itemPrice) {
+       var item = await Item.createItem(req.session.currentPerson.officeID,req.session.currentPerson._id,itemName,itemPrice);
+       item.save();
+ //var person = await Person.PersonIsexists(username,password,true,"");
+    console.log("finsihcreatingItemfunction",item);
+    res.send({answer:"succsessfull"});
+
+    }
+   
+});
+
 
 
 app.get("/GetPerson", function(req,res) {
@@ -140,24 +189,16 @@ app.get("/logout", function(req,res) {
   function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated()) { return next(); }
   }
-app.post("/GetManagarData",function(req,res){
-//     console.log(req.session);
-//    const {currentUser} = req.session;
-//     res.send({username:currentUser.username,OfficeName:currentUser.officeName,officeEmployee:currentUser.officeEmployee});
-});
-
-
-
 
 app.listen(5000, function() {
     console.log("Server started on port 3000");
   });
 
-  app.get("/hi",function (req,res) {
-    res.send({answer:"f"});
-    console.log("hi");
-  });
-  app.post("/hi",function (req,res) {
-    res.send({answer:"f"});
-    console.log("hi");
-  })
+//   app.get("/hi",function (req,res) {
+//     res.send({answer:"f"});
+//     console.log("hi");
+//   });
+//   app.post("/hi",function (req,res) {
+//     res.send({answer:"f"});
+//     console.log("hi");
+//   })
